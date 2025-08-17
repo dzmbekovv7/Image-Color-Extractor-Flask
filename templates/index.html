@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎨 Color Palette Extractor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 Color Palette Extractor</h1>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="image" id="imageInput" accept="image/*" required />
+      <button type="submit">Upload Image</button>
+    </form>
+
+    <div id="result" class="result-section">
+      <img id="uploadedImage" src="" alt="Uploaded Image"/>
+      <div id="palette" class="palette"></div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      const res = await fetch('/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      const img = document.getElementById('uploadedImage');
+      img.src = `/uploads/${data.filename}`;
+
+      const palette = document.getElementById('palette');
+      palette.innerHTML = '';
+      data.colors.forEach(color => {
+        const swatch = document.createElement('div');
+        swatch.className = 'swatch';
+        swatch.style.backgroundColor = color;
+        swatch.innerText = color;
+        palette.appendChild(swatch);
+      });
+    });
+  </script>
+</body>
+</html>
