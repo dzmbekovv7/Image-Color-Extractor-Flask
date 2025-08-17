@@ -6,3 +6,4 @@ def setup_cors(app):
         resources={r"/*": {"origins": "*"}},  # можно ограничить список origins
         supports_credentials=True
     )
+
