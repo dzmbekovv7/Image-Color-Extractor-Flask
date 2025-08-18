@@ -8,6 +8,9 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 
+# Создать папку uploads, если её нет
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
 setup_cors(app)
 
 @app.route('/')
@@ -35,7 +38,5 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 if __name__ == '__main__':
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
-
